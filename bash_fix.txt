@@ -1,0 +1,11 @@
+If command-line completition does not work after "=", e.g. when specifying meshtool parameters,
+add the following lines to your .bashrc file.
+
+
+# this is a fix to bash-completition
+_completion_loader () {
+  local dir=/usr/share/bash-completion/completions
+  local cmd="${1##*/}"
+  . "${dir}/${cmd}" &>/dev/null && return 124
+  complete -o default -o bashdefault "${cmd}" &>/dev/null && return 124
+}

@@ -1,0 +1,78 @@
+# here one can select the quality metric to use in Meshtool
+# all of them offer similar results for isotropic elements
+MT_STANDARD_QUALITY_METRIC = 1
+#MT_CONDITION_NUMBER_METRIC = 1
+#MT_MINIMAL_DIHEDRAL_ANGLE_METRIC = 1
+
+# Use tetgens orient2d / orient3d for calculating volumes
+# MT_USE_EXACT_PREDICATES = 1
+
+# overwrite the calculation of 1 / sqrt(x) by fast inverse sqrt algorithm
+#MT_FAST_INV_SQRT = 1
+
+ifeq ($(findstring gnu, $(MT_CC_ENV)), gnu)
+  CXX = g++
+endif
+ifeq ($(findstring intel, $(MT_CC_ENV)), intel)
+  CXX = icpc
+endif
+ifeq ($(findstring clang, $(MT_CC_ENV)), clang)
+  CXX = clang++
+endif
+
+ifdef MT_DEBUG
+  CXXOPTS = -std=c++11 -O0 -g
+else
+  CXXOPTS = -std=c++11 -O2 -g -DNDEBUG
+endif
+
+CXXOPTS += -Wall -Wshadow -DTETLIBRARY -MMD
+
+ifdef MT_STANDARD_QUALITY_METRIC
+  CXXOPTS += -DQMETRIC_STD
+else
+  ifdef MT_CONDITION_NUMBER_METRIC
+  CXXOPTS += -DQMETRIC_COND
+  else
+  CXXOPTS += -DQMETRIC_SINUS
+  endif
+endif
+
+ifdef MT_FAST_INV_SQRT
+  CXXOPTS += -DFAST_INV_SQRT
+endif
+
+ifdef MT_USE_EXACT_PREDICATES
+  CXXOPTS += -DEXACT_PREDICATES
+endif
+
+ifdef MT_LARGE_TYPES
+  MT_INT = -DMT_INT=long
+  MT_REAL = -DMT_REAL=double
+else
+  MT_INT = -DMT_INT=int
+  MT_REAL = -DMT_REAL=float
+endif
+CXXOPTS += $(MT_INT) $(MT_REAL)
+
+ifdef MT_OPENMP
+CXXOPTS += -fopenmp -DOPENMP
+endif
+
+ifdef MT_STATIC
+CXXOPTS += -static
+endif
+
+MKFLG = -j$(strip $(PAR_MAKE))
+ifdef MT_SILENT
+MKFLG += -s
+MKSLFLG = -s
+endif
+
+ifdef MT_SILENT_PRG
+CXXOPTS += -DSILENT_PROGRESS
+endif
+
+ifdef WINDOWS_BUILD
+CXXOPTS += -DWINBUILD
+endif

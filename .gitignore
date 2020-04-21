@@ -1,0 +1,48 @@
+# the executables
+meshtool
+retag
+convert_igb_to_flowvc
+convert_obj_to_igb
+correspondance
+ascii_extract
+fibmap
+enclose
+vtxToMesh
+combine_dynpts
+convert_dynpts
+samesideofplane
+transfer
+spctm_data
+fillup_dynpts
+refine_time_igb
+mt_test
+simplify_tag_topology
+volumefractions
+tara_msh_retag
+
+# object files
+*.o
+*.a
+
+# compiler generated dependency files
+*.d
+
+# doc output
+doxydoc/html
+
+# vi .swp files
+*.swp
+*.swo
+
+# ctags
+tags
+TAGS
+
+# addons
+meshtool_addons
+
+# auxiliary meshtool files
+*.fcon
+
+# switches
+my_switches.def
